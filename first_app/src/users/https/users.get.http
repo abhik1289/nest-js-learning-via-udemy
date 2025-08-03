@@ -1,0 +1,8 @@
+
+
+GET http://localhost:4000/users/67
+# ?limit=12
+# &ofset=89
+
+
+GET http://localhost:4000/posts
