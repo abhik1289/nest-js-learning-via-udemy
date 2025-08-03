@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const tags_controller_1 = require("./tags.controller");
 const tag_entity_1 = require("./tag.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const tags_service_1 = require("./tags.service");
 let TagsModule = class TagsModule {
 };
 exports.TagsModule = TagsModule;
@@ -18,6 +19,7 @@ exports.TagsModule = TagsModule = __decorate([
     (0, common_1.Module)({
         controllers: [tags_controller_1.TagsController],
         imports: [typeorm_1.TypeOrmModule.forFeature([tag_entity_1.Tag])],
+        providers: [tags_service_1.TagsService],
     })
 ], TagsModule);
 //# sourceMappingURL=tags.module.js.map
