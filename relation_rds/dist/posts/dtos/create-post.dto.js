@@ -113,13 +113,12 @@ __decorate([
 ], CreatePostDto.prototype, "publishOn", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        description: 'Array of tags passed as string values',
-        example: ['nestjs', 'typescript'],
+        description: 'Array of ids of tags passed as integers in an array',
+        example: [1, 2],
     }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsString)({ each: true }),
-    (0, class_validator_1.MinLength)(3, { each: true }),
+    (0, class_validator_1.IsInt)({ each: true }),
     __metadata("design:type", Array)
 ], CreatePostDto.prototype, "tags", void 0);
 __decorate([

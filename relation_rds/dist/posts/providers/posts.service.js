@@ -19,17 +19,23 @@ const post_entity_1 = require("../post.entity");
 const meta_option_entity_1 = require("../../meta-options/meta-option.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const user_service_1 = require("../../user/user.service");
+const tags_service_1 = require("../../tags/tags.service");
 let PostsService = class PostsService {
     postRepository;
     metaOptionRepository;
     usersService;
-    constructor(postRepository, metaOptionRepository, usersService) {
+    tagsService;
+    constructor(postRepository, metaOptionRepository, usersService, tagsService) {
         this.postRepository = postRepository;
         this.metaOptionRepository = metaOptionRepository;
         this.usersService = usersService;
+        this.tagsService = tagsService;
     }
     async create(createPostDto) {
-        const { metaOptions, authorId, ...rest } = createPostDto;
+        const { metaOptions, authorId, tags, ...rest } = createPostDto;
+        if (!tags)
+            throw new Error('Tags are required');
+        let tag = await this.tagsService.findMultiple(tags);
         const user = await this.usersService.findOne(authorId);
         if (!user) {
             throw new Error(`Author with ID ${authorId} not found`);
@@ -38,6 +44,7 @@ let PostsService = class PostsService {
             ...rest,
             metaOptions: metaOptions ? { ...metaOptions } : undefined,
             author: user,
+            tags: tag
         });
         return this.postRepository.save(post);
     }
@@ -51,6 +58,7 @@ let PostsService = class PostsService {
             where: { id },
             relations: {
                 metaOptions: true,
+                tags: true
             },
         });
         console.log(post?.metaOptions);
@@ -68,6 +76,7 @@ exports.PostsService = PostsService = __decorate([
     __param(1, (0, typeorm_2.InjectRepository)(meta_option_entity_1.MetaOption)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
         typeorm_1.Repository,
-        user_service_1.UserService])
+        user_service_1.UserService,
+        tags_service_1.TagsService])
 ], PostsService);
 //# sourceMappingURL=posts.service.js.map

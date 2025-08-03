@@ -6,6 +6,7 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { TagsService } from 'src/tags/tags.service';
 
 @Injectable()
 export class PostsService {
@@ -16,12 +17,17 @@ export class PostsService {
     @InjectRepository(MetaOption)
     private readonly metaOptionRepository: Repository<MetaOption>,
     private readonly usersService: UserService,
+    private readonly tagsService: TagsService,
   ) {}
 
   public async create(createPostDto: CreatePostDto) {
     // const
 
-    const { metaOptions, authorId, ...rest } = createPostDto;
+    const { metaOptions, authorId,tags, ...rest } = createPostDto;
+
+    if(!tags) throw new Error('Tags are required');
+
+    let tag = await this.tagsService.findMultiple(tags);
 
     //find author
     const user = await this.usersService.findOne(authorId);
@@ -36,6 +42,7 @@ export class PostsService {
       ...rest,
       metaOptions: metaOptions ? { ...metaOptions } : undefined,
       author: user,
+      tags: tag
     });
     return this.postRepository.save(post);
     // return {}
@@ -53,6 +60,7 @@ export class PostsService {
       where: { id },
       relations: {
         metaOptions: true,
+        tags: true
       },
     });
     console.log(post?.metaOptions);

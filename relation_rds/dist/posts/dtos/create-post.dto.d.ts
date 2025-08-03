@@ -10,7 +10,7 @@ export declare class CreatePostDto {
     schema?: string;
     featuredImageUrl?: string;
     publishOn?: Date;
-    tags?: string[];
+    tags?: number[];
     metaOptions?: CreatePostMetaOptionsDto | null;
     authorId: string;
 }

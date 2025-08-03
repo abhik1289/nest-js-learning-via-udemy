@@ -15,6 +15,7 @@ const postStatus_enum_1 = require("./enums/postStatus.enum");
 const postType_enum_1 = require("./enums/postType.enum");
 const meta_option_entity_1 = require("../meta-options/meta-option.entity");
 const user_entity_1 = require("../user/entities/user.entity");
+const tag_entity_1 = require("../tags/tag.entity");
 let Post = class Post {
     id;
     title;
@@ -26,8 +27,8 @@ let Post = class Post {
     featuredImageUrl;
     publishOn;
     metaOptions;
-    tags;
     author;
+    tags;
 };
 exports.Post = Post;
 __decorate([
@@ -113,6 +114,13 @@ __decorate([
     }),
     __metadata("design:type", user_entity_1.User)
 ], Post.prototype, "author", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => tag_entity_1.Tag, (tag) => tag.posts, {
+        eager: true
+    }),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], Post.prototype, "tags", void 0);
 exports.Post = Post = __decorate([
     (0, typeorm_1.Entity)()
 ], Post);

@@ -2,6 +2,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +14,7 @@ import { postStatus } from './enums/postStatus.enum';
 import { postType } from './enums/postType.enum';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 // import { MetaOptions } from 'src/meta-options/meta-option.entity';
 
 @Entity()
@@ -87,11 +90,16 @@ export class Post {
   metaOptions?: MetaOption;
 
   // Work on these in lecture on relationships
-  tags?: string[];
 
   @ManyToOne(() => User, (user) => user.posts, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   author: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts,{
+    eager: true
+  })
+  @JoinTable()
+  tags?: Tag[];
 }
