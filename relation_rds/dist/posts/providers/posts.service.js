@@ -44,7 +44,7 @@ let PostsService = class PostsService {
             ...rest,
             metaOptions: metaOptions ? { ...metaOptions } : undefined,
             author: user,
-            tags: tag
+            tags: tag,
         });
         return this.postRepository.save(post);
     }
@@ -54,19 +54,34 @@ let PostsService = class PostsService {
         });
     }
     async delete(id) {
-        const post = await this.postRepository.findOne({
-            where: { id },
-            relations: {
-                metaOptions: true,
-                tags: true
-            },
-        });
+        let post;
+        try {
+            post = await this.postRepository.findOne({
+                where: { id },
+                relations: {
+                    metaOptions: true,
+                    tags: true,
+                },
+            });
+        }
+        catch (error) {
+            throw new common_1.RequestTimeoutException('There is an error with the database');
+        }
+        if (!post) {
+            throw new common_1.BadRequestException('Post not found');
+        }
+        if (post && !post.metaOptions) {
+            throw new common_1.BadRequestException('MetaOptions not found');
+        }
         console.log(post?.metaOptions);
-        if (post)
-            await this.postRepository.delete(id);
+        await this.postRepository.delete(id);
         if (post?.metaOptions)
             await this.metaOptionRepository.delete(post.metaOptions.id);
-        return { success: true, id };
+        else
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.PRECONDITION_FAILED,
+                error: 'MetaOptions not found',
+            }, common_1.HttpStatus.PRECONDITION_FAILED, {});
     }
 };
 exports.PostsService = PostsService;

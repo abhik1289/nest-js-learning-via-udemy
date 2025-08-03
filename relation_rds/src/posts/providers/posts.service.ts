@@ -1,4 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
@@ -23,9 +30,9 @@ export class PostsService {
   public async create(createPostDto: CreatePostDto) {
     // const
 
-    const { metaOptions, authorId,tags, ...rest } = createPostDto;
+    const { metaOptions, authorId, tags, ...rest } = createPostDto;
 
-    if(!tags) throw new Error('Tags are required');
+    if (!tags) throw new Error('Tags are required');
 
     let tag = await this.tagsService.findMultiple(tags);
 
@@ -42,7 +49,7 @@ export class PostsService {
       ...rest,
       metaOptions: metaOptions ? { ...metaOptions } : undefined,
       author: user,
-      tags: tag
+      tags: tag,
     });
     return this.postRepository.save(post);
     // return {}
@@ -56,13 +63,29 @@ export class PostsService {
 
   public async delete(id: number) {
     // // const numericId = Number(id);
-    const post = await this.postRepository.findOne({
-      where: { id },
-      relations: {
-        metaOptions: true,
-        tags: true
-      },
-    });
+
+    let post;
+
+    try {
+      post = await this.postRepository.findOne({
+        where: { id },
+        relations: {
+          metaOptions: true,
+          tags: true,
+        },
+      });
+    } catch (error) {
+      throw new RequestTimeoutException('There is an error with the database');
+    }
+
+    if (!post) {
+      throw new BadRequestException('Post not found');
+    }
+
+    if (post && !post.metaOptions) {
+      throw new BadRequestException('MetaOptions not found');
+    }
+
     console.log(post?.metaOptions);
     // console.log(post);
     // let metaOption = await this.metaOptionRepository.findOne({
@@ -75,10 +98,19 @@ export class PostsService {
     // // await this.postRepository.delete(id);
     // // if (post && post.metaOptions)
     // //   await this.metaOptionRepository.delete(post.metaOptions.id);
-    if (post) await this.postRepository.delete(id);
+    await this.postRepository.delete(id);
     if (post?.metaOptions)
       await this.metaOptionRepository.delete(post.metaOptions.id);
-
-    return { success: true, id };
+    else
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'MetaOptions not found',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+        {
+          //sensitive information for logging
+        },
+      );
   }
 }

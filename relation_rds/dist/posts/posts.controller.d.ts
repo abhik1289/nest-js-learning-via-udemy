@@ -5,8 +5,5 @@ export declare class PostsController {
     constructor(postsService: PostsService);
     create(createPostDto: CreatePostDto): Promise<import("./post.entity").Post>;
     findAll(): Promise<import("./post.entity").Post[]>;
-    delete(id: number): Promise<{
-        success: boolean;
-        id: number;
-    }>;
+    delete(id: number): Promise<void>;
 }

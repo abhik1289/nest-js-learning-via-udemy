@@ -12,8 +12,5 @@ export declare class PostsService {
     constructor(postRepository: Repository<Post>, metaOptionRepository: Repository<MetaOption>, usersService: UserService, tagsService: TagsService);
     create(createPostDto: CreatePostDto): Promise<Post>;
     findAll(): Promise<Post[]>;
-    delete(id: number): Promise<{
-        success: boolean;
-        id: number;
-    }>;
+    delete(id: number): Promise<void>;
 }
