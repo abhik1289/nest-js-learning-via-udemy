@@ -17,7 +17,7 @@ exports.TagsModule = TagsModule;
 exports.TagsModule = TagsModule = __decorate([
     (0, common_1.Module)({
         controllers: [tags_controller_1.TagsController],
-        imports: [typeorm_1.TypeOrmModule.forFeature([tag_entity_1.Tags])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([tag_entity_1.Tag])],
     })
 ], TagsModule);
 //# sourceMappingURL=tags.module.js.map

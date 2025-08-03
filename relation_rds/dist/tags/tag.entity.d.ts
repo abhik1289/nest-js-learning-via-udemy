@@ -1,11 +1,13 @@
-export declare class Tags {
-    id: string;
+import { Post } from 'src/posts/post.entity';
+export declare class Tag {
+    id: number;
     name: string;
-    description?: string;
     slug: string;
+    description: string;
     schema: string;
-    featureImageUrl?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    featuredImage: string;
+    posts: Post[];
+    createDate: Date;
+    updateDate: Date;
     deletedAt: Date;
 }

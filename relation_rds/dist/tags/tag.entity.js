@@ -9,57 +9,85 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tags = void 0;
+exports.Tag = void 0;
 const typeorm_1 = require("typeorm");
-let Tags = class Tags {
+const post_entity_1 = require("../posts/post.entity");
+let Tag = class Tag {
     id;
     name;
-    description;
     slug;
+    description;
     schema;
-    featureImageUrl;
-    createdAt;
-    updatedAt;
+    featuredImage;
+    posts;
+    createDate;
+    updateDate;
     deletedAt;
 };
-exports.Tags = Tags;
+exports.Tag = Tag;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
-], Tags.prototype, "id", void 0);
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], Tag.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, type: 'varchar', nullable: false }),
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        length: 256,
+        nullable: false,
+        unique: true,
+    }),
     __metadata("design:type", String)
-], Tags.prototype, "name", void 0);
+], Tag.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false }),
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        length: 512,
+        nullable: false,
+        unique: true,
+    }),
     __metadata("design:type", String)
-], Tags.prototype, "description", void 0);
+], Tag.prototype, "slug", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, type: 'varchar', nullable: false }),
+    (0, typeorm_1.Column)({
+        type: 'text',
+        nullable: true,
+    }),
     __metadata("design:type", String)
-], Tags.prototype, "slug", void 0);
+], Tag.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    (0, typeorm_1.Column)({
+        type: 'text',
+        nullable: true,
+    }),
     __metadata("design:type", String)
-], Tags.prototype, "schema", void 0);
+], Tag.prototype, "schema", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        length: 1024,
+        nullable: true,
+    }),
     __metadata("design:type", String)
-], Tags.prototype, "featureImageUrl", void 0);
+], Tag.prototype, "featuredImage", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => post_entity_1.Post, (post) => post.tags, {
+        onDelete: 'CASCADE',
+    }),
+    __metadata("design:type", Array)
+], Tag.prototype, "posts", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], Tags.prototype, "createdAt", void 0);
+], Tag.prototype, "createDate", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
-], Tags.prototype, "updatedAt", void 0);
+], Tag.prototype, "updateDate", void 0);
 __decorate([
     (0, typeorm_1.DeleteDateColumn)(),
     __metadata("design:type", Date)
-], Tags.prototype, "deletedAt", void 0);
-exports.Tags = Tags = __decorate([
+], Tag.prototype, "deletedAt", void 0);
+exports.Tag = Tag = __decorate([
     (0, typeorm_1.Entity)()
-], Tags);
+], Tag);
 //# sourceMappingURL=tag.entity.js.map
