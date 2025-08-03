@@ -35,6 +35,13 @@ let TagsService = class TagsService {
     async delete(id) {
         return await this.tagRepository.delete(id);
     }
+    async findMultiple(ids) {
+        return await this.tagRepository.find({
+            where: {
+                id: (0, typeorm_1.In)(ids),
+            },
+        });
+    }
 };
 exports.TagsService = TagsService;
 exports.TagsService = TagsService = __decorate([

@@ -7,4 +7,5 @@ export declare class TagsService {
     findAll(): Promise<Tag[]>;
     softDelete(id: number): Promise<import("typeorm").UpdateResult>;
     delete(id: number): Promise<import("typeorm").DeleteResult>;
+    findMultiple(ids: number[]): Promise<Tag[]>;
 }

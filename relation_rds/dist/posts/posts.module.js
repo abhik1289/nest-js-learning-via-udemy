@@ -14,13 +14,14 @@ const post_entity_1 = require("./post.entity");
 const meta_option_entity_1 = require("../meta-options/meta-option.entity");
 const posts_service_1 = require("./providers/posts.service");
 const user_module_1 = require("../user/user.module");
+const tags_module_1 = require("../tags/tags.module");
 let PostsModule = class PostsModule {
 };
 exports.PostsModule = PostsModule;
 exports.PostsModule = PostsModule = __decorate([
     (0, common_1.Module)({
         controllers: [posts_controller_1.PostsController],
-        imports: [user_module_1.UserModule, typeorm_1.TypeOrmModule.forFeature([post_entity_1.Post, meta_option_entity_1.MetaOption])],
+        imports: [user_module_1.UserModule, tags_module_1.TagsModule, typeorm_1.TypeOrmModule.forFeature([post_entity_1.Post, meta_option_entity_1.MetaOption])],
         providers: [posts_service_1.PostsService],
     })
 ], PostsModule);
