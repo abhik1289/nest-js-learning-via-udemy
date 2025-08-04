@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -10,12 +10,36 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     readonly userRespository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
   public async create(createUserDto: CreateUserDto) {
     const user = this.userRespository.create(createUserDto);
 
     return await this.userRespository.save(user);
+  }
+
+  public async createManyuser(createUserDto: CreateUserDto[]) {
+    let newUsers: User[] = [];
+
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      for (let user of createUserDto) {
+        const newUser = queryRunner.manager.create(User, user);
+        await queryRunner.manager.save(newUser);
+        newUsers.push(newUser);
+      }
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+    return newUsers;
   }
 
   findAll() {

@@ -19,12 +19,35 @@ const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 let UserService = class UserService {
     userRespository;
-    constructor(userRespository) {
+    dataSource;
+    constructor(userRespository, dataSource) {
         this.userRespository = userRespository;
+        this.dataSource = dataSource;
     }
     async create(createUserDto) {
         const user = this.userRespository.create(createUserDto);
         return await this.userRespository.save(user);
+    }
+    async createManyuser(createUserDto) {
+        let newUsers = [];
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            for (let user of createUserDto) {
+                const newUser = queryRunner.manager.create(user_entity_1.User, user);
+                await queryRunner.manager.save(newUser);
+                newUsers.push(newUser);
+            }
+            await queryRunner.commitTransaction();
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+        }
+        finally {
+            await queryRunner.release();
+        }
+        return newUsers;
     }
     findAll() {
         return `This action returns all user`;
@@ -45,6 +68,7 @@ exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.DataSource])
 ], UserService);
 //# sourceMappingURL=user.service.js.map
