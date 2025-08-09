@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
+import { ConfigModule } from '@nestjs/config';
 
 // TypeOrmModule.forRoot({
 //       type: 'postgres',
@@ -17,6 +18,9 @@ import { User } from './users/user.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [],
       inject: [],

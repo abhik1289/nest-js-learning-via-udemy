@@ -6,9 +6,12 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModule } from './posts/posts.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TagsModule,
     MetaOptionsModule,
     TypeOrmModule.forRootAsync({
@@ -25,6 +28,7 @@ import { UserModule } from './user/user.module';
     }),
     PostsModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

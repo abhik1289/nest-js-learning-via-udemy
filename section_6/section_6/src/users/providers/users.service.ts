@@ -8,7 +8,7 @@ import { User } from '../user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
-
+import {ConfigService} from "@nestjs/config";
 /**
  * Controller class for '/users' API endpoint
  */
@@ -20,9 +20,13 @@ export class UsersService {
      * */
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private readonly configService: ConfigService
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
+
+    const environment = this.configService.get<string>('S3_BUCKET');
+
     // Check if user with email exists
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },

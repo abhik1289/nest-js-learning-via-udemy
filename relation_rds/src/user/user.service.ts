@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -11,12 +12,15 @@ export class UserService {
     @InjectRepository(User)
     readonly userRespository: Repository<User>,
     private dataSource: DataSource,
+    private readonly configService: ConfigService
   ) {}
 
   public async create(createUserDto: CreateUserDto) {
-    const user = this.userRespository.create(createUserDto);
+    const config = this.configService.get('database');
+    // const user = this.userRespository.create(createUserDto);
 
-    return await this.userRespository.save(user);
+    // return await this.userRespository.save(user);
+    return {}
   }
 
   public async createManyuser(createUserDto: CreateUserDto[]) {
