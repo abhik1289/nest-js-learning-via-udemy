@@ -29,6 +29,7 @@ let UserService = class UserService {
     }
     async create(createUserDto) {
         const config = this.configService.get('database');
+        console.log(config);
         return {};
     }
     async createManyuser(createUserDto) {

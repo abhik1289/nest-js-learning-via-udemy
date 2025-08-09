@@ -23,6 +23,7 @@ let UserController = class UserController {
         this.userService = userService;
     }
     create(createUserDto) {
+        console.log("THIS IS CALLING");
         return this.userService.create(createUserDto);
     }
     findAll() {

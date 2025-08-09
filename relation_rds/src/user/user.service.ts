@@ -17,6 +17,7 @@ export class UserService {
 
   public async create(createUserDto: CreateUserDto) {
     const config = this.configService.get('database');
+    console.log(config);
     // const user = this.userRespository.create(createUserDto);
 
     // return await this.userRespository.save(user);

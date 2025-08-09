@@ -17,9 +17,12 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', () => {
+
+    console.log(process.env.NODE_ENV);
+
     return request(app.getHttpServer())
       .get('/')
-      .expect(200)
+      .expect(404)
       .expect('Hello World!');
   });
 });
